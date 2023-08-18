@@ -31,7 +31,10 @@ client.on('ready', () => {
 const prefix = '!'
 
 client.on('messageCreate', (message) => {
+
     if(!message.content.startsWith(prefix) || message.author.bot) return;
+
+    const id = message.id
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
@@ -132,7 +135,7 @@ client.on('messageCreate', (message) => {
     }
 
     client.on("interactionCreate", async (interaction) => {
-        if(interaction.isButton()) {
+        if(interaction.isButton() && id === interaction.message.reference.messageId) {
             interaction.message.components.forEach((row) => {
                 row.components.forEach((b) => {
                     if(b.data.custom_id === interaction.customId) {
@@ -161,8 +164,8 @@ client.on('messageCreate', (message) => {
 
             const possible = ghosts(evidence, notEvidence)
 
-            interaction.update({
-                content: `**Possible types:**\n${ possible.map((p) => p.name).join(', ') }\n**Evidence:**`,
+            await interaction.update({
+                content: `**Possible types:**\n${ possible.length ? possible.map((p) => p.name).join(', ') : '*None*' }\n**Evidence:**`,
                 components: interaction.message.components
             })
         }
