@@ -15,9 +15,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 try {
   console.log('Started refreshing application (/) commands.');
-
   await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), { body: commands });
-
   console.log('Successfully reloaded application (/) commands.');
 } catch (error) {
   console.error(error);
@@ -41,12 +39,10 @@ client.on('messageCreate', (message) => {
     const evidence = []
     const notEvidence = []
 
-    console.log(message.content)
-
     if(command === 'ping'){
         message.channel.send('pong!');
     }
-    else if(command === 'journal') {
+    else if(command === 'journal' || command === 'j') {
         const emf = new ButtonBuilder()
             .setCustomId('emf')
             .setLabel('EMF Level 5')
@@ -96,15 +92,9 @@ client.on('messageCreate', (message) => {
 
     client.on("interactionCreate", async (interaction) => {
         if(interaction.isButton()) {
-            // message.edit({
-            //     content: `**Possible types:**\n${ ghosts().join(', ') }\n**Evidence: 2**`,
-            // })
-            // interaction.deferUpdate()
-
             interaction.message.components.forEach((row) => {
                 row.components.forEach((b) => {
                     if(b.data.custom_id === interaction.customId) {
-                        console.log(evidence)
                         if(evidence.includes(interaction.customId)) {
                             // already picked
                             b.data.style = ButtonStyle.Danger

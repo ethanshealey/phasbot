@@ -17,9 +17,5 @@ export default (evidence, notEvidence) => {
         return true
     })
 
-
-
-    console.log(possible, evidence, notEvidence)
-
     return possible
 }
